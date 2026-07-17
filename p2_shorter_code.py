@@ -1,26 +1,26 @@
 # All possible winning combinations of indices on a 0-8 board
 WINS = [(0,1,2), (3,4,5), (6,7,8), (0,3,6), (1,4,7), (2,5,8), (0,4,8), (2,4,6)]
 
-def score(b):
+def score(board):
     """Returns 1 if X wins, -1 if O wins, or 0."""
     for w in WINS:
-        if b[w[0]] == b[w[1]] == b[w[2]] != ' ':
-            return 1 if b[w[0]] == 'X' else -1
+        if board[w[0]] == board[w[1]] == board[w[2]] != ' ':
+            return 1 if board[w[0]] == 'X' else -1
     return 0
 
-def minimax(b, is_max):
+def minimax(board, is_max):
     """Calculates the best possible outcome for a given board state."""
-    s = score(b)
-    if s != 0 or ' ' not in b: 
+    s = score(board)
+    if s != 0 or ' ' not in board: 
         return s
 
     # Get scores for all empty slots recursively
     moves = []
     for i in range(9):
-        if b[i] == ' ':
-            b[i] = 'X' if is_max else 'O'
-            moves.append(minimax(b, not is_max))
-            b[i] = ' ' # Undo move
+        if board[i] == ' ':
+            board[i] = 'X' if is_max else 'O'
+            moves.append(minimax(board, not is_max))
+            board[i] = ' ' # Undo move
             
     return max(moves) if is_max else min(moves)
 
