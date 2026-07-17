@@ -1,0 +1,57 @@
+# All possible winning combinations of indices on a 0-8 board
+WINS = [(0,1,2), (3,4,5), (6,7,8), (0,3,6), (1,4,7), (2,5,8), (0,4,8), (2,4,6)]
+
+def score(b):
+    """Returns 1 if X wins, -1 if O wins, or 0."""
+    for w in WINS:
+        if b[w[0]] == b[w[1]] == b[w[2]] != ' ':
+            return 1 if b[w[0]] == 'X' else -1
+    return 0
+
+def minimax(b, is_max):
+    """Calculates the best possible outcome for a given board state."""
+    s = score(b)
+    if s != 0 or ' ' not in b: 
+        return s
+
+    # Get scores for all empty slots recursively
+    moves = []
+    for i in range(9):
+        if b[i] == ' ':
+            b[i] = 'X' if is_max else 'O'
+            moves.append(minimax(b, not is_max))
+            b[i] = ' ' # Undo move
+            
+    return max(moves) if is_max else min(moves)
+
+# --- Main Game Loop ---
+board = [' '] * 9
+print("Tic-Tac-Toe! Enter 0-8 to play.")
+
+while ' ' in board and score(board) == 0:
+    # Human Turn ('O')
+    move = int(input("\nYour move (0-8): "))
+    if board[move] != ' ': 
+        continue
+    board[move] = 'O'
+    
+    # AI Turn ('X')
+    if ' ' in board and score(board) == 0:
+        # Find the empty spot that yields the highest minimax score
+        best_score, best_move = -2, -1
+        for i in range(9):
+            if board[i] == ' ':
+                board[i] = 'X'
+                m_score = minimax(board, False)
+                board[i] = ' '
+                if m_score > best_score:
+                    best_score, best_move = m_score, i
+        board[best_move] = 'X'
+
+    # Print Board Progress
+    for i in (0, 3, 6):
+        print(f" {board[i]} | {board[i+1]} | {board[i+2]} ")
+
+# Final Result
+res = score(board)
+print("\nAI Wins!" if res == 1 else "You Win!" if res == -1 else "\nIt's a draw!")
