@@ -1,0 +1,74 @@
+import math
+
+class TicTacToeAI:
+    def __init__(self):
+        self.board = [" " for _ in range(9)] # 3x3 grid indexed 0-8
+
+    def print_board(self):
+        for i in range(0, 9, 3):
+            print(f" {self.board[i]} | {self.board[i+1]} | {self.board[i+2]} ")
+            if i < 6: print("---+---+---")
+
+    def check_winner(self, board):
+        lines = [(0,1,2), (3,4,5), (6,7,8), (0,3,6), (1,4,7), (2,5,8), (0,4,8), (2,4,6)]
+        for a, b, c in lines:
+            if board[a] != " " and board[a] == board[b] == board[c]:
+                return board[a]
+        return "Tie" if " " not in board else None
+
+    def minimax(self, board, is_maximizing):
+        result = self.check_winner(board)
+        if result == "O": return 1    # AI wins
+        if result == "X": return -1   # Human wins
+        if result == "Tie": return 0  # Draw
+
+        scores = []
+        for i in range(9):
+            if board[i] == " ":
+                board[i] = "O" if is_maximizing else "X"
+                scores.append(self.minimax(board, not is_maximizing))
+                board[i] = " " # Undo move
+        
+        return max(scores) if is_maximizing else min(scores)
+
+    def best_move(self):
+        best_score = -math.inf
+        move = -1
+        for i in range(9):
+            if self.board[i] == " ":
+                self.board[i] = "O"
+                score = self.minimax(self.board, False)
+                self.board[i] = " "
+                if score > best_score:
+                    best_score = score
+                    move = i
+        return move
+
+# --- Game Loop ---
+game = TicTacToeAI()
+print("Welcome to Tic-Tac-Toe! You are 'X' and AI is 'O'.\nEnter moves as 0-8 (0=Top-Left, 8=Bottom-Right).\n")
+
+while game.check_winner(game.board) is None:
+    game.print_board()
+    
+    # Human Move
+    try:
+        human_move = int(input("\nYour move (0-8): "))
+        if game.board[human_move] != " ":
+            print("Spot taken! Try again.")
+            continue
+        game.board[human_move] = "X"
+    except (ValueError, IndexError):
+        print("Invalid input. Enter a number from 0 to 8.")
+        continue
+
+    if game.check_winner(game.board) is not None:
+        break
+
+    # AI Move
+    print("\nAI is thinking...")
+    game.board[game.best_move()] = "O"
+
+game.print_board()
+winner = game.check_winner(game.board)
+print(f"\nGame Over! Result: {f'AI ({winner}) wins!' if winner in ['X','O'] else 'It is a Tie!'}")
