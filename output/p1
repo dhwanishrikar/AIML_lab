@@ -1,0 +1,23 @@
+Enter number of rows:
+3
+Enter number of columns:
+3
+Enter 3 rows (space-separated values like '0 1 1' or 'D 0 1'):
+0 D 1
+1 D 0
+0 0 D
+Enter starting row index:
+0
+Enter starting column index:
+0
+
+--- Simulation Results ---
+Step 1 | Pos: (0, 0) -> Action: RIGHT
+Step 2 | Pos: (0, 1) -> Action: CLEAN
+Step 3 | Pos: (0, 1) -> Action: DOWN
+Step 4 | Pos: (1, 1) -> Action: CLEAN
+Step 5 | Pos: (1, 1) -> Action: DOWN
+Step 6 | Pos: (2, 1) -> Action: RIGHT
+Step 7 | Pos: (2, 2) -> Action: CLEAN
+Step 8 | Pos: (2, 2) -> Action: STAY
+🎉 No more reachable dirt left or agent trapped!
